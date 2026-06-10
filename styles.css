@@ -1589,7 +1589,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 .gallery-thumbs--aetheria {
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
 }
 
 @media (max-width: 1024px) {
