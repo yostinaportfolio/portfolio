@@ -160,12 +160,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   mask-image: linear-gradient(to left, black, transparent);
 }
 
-/* Arabic calligraphy background */
-.calligraphy-bg {
-  position: fixed;
+/* Arabic calligraphy — inside each section, above bg, below content */
+.section-calligraphy {
+  position: absolute;
   inset: 0;
-  pointer-events: none;
   z-index: 0;
+  pointer-events: none;
   overflow: hidden;
 }
 
@@ -175,119 +175,114 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-weight: 400;
   line-height: 1;
   white-space: nowrap;
-  color: var(--brown-mid);
-  opacity: 0.055;
   user-select: none;
-  transition: opacity 0.6s var(--ease-out), color 0.6s var(--ease-out);
 }
 
-[data-theme="night"] .calligraphy-word {
-  color: var(--gold);
-  opacity: 0.07;
+.calligraphy-word.sc-light {
+  color: #5D4037;
+  opacity: 0.4;
+  font-size: clamp(4rem, 11vw, 8.5rem);
 }
 
-.cw-architecture {
+.calligraphy-word.sc-sm {
+  font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+  opacity: 0.34;
+}
+
+.calligraphy-word.sc-gold {
+  color: #A67C2E;
+  opacity: 0.48;
+  font-size: clamp(4.5rem, 12vw, 9rem);
+}
+
+.calligraphy-word.sc-dark {
+  color: #F6F2E5;
+  opacity: 0.22;
+  font-size: clamp(2.8rem, 7vw, 6rem);
+}
+
+[data-theme="night"] .calligraphy-word.sc-light {
+  color: #C9A962;
+  opacity: 0.3;
+}
+
+[data-theme="night"] .calligraphy-word.sc-gold {
+  color: #FFD89B;
+  opacity: 0.38;
+}
+
+[data-theme="night"] .calligraphy-word.sc-dark {
+  color: #FFD89B;
+  opacity: 0.14;
+}
+
+/* Position per section */
+.intro-showcase .calligraphy-word:first-child {
   top: 8%;
-  right: -2%;
-  font-size: clamp(5rem, 14vw, 11rem);
-  transform: rotate(-8deg);
-  opacity: 0.045;
+  right: 4%;
+  transform: rotate(-7deg);
 }
 
-.cw-heritage {
-  top: 38%;
-  left: -3%;
-  font-size: clamp(4rem, 10vw, 8rem);
+.intro-showcase .calligraphy-word.sc-sm {
+  bottom: 10%;
+  left: 6%;
+  transform: rotate(5deg);
+}
+
+.school-section .calligraphy-word:first-child {
+  top: 12%;
+  left: 3%;
   transform: rotate(6deg);
 }
 
-.cw-art {
-  top: 22%;
-  left: 18%;
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
+.school-section .calligraphy-word.sc-sm {
+  bottom: 8%;
+  right: 5%;
   transform: rotate(-4deg);
-  opacity: 0.04;
 }
 
-.cw-ankh {
-  top: 55%;
-  right: 12%;
-  font-size: clamp(3.5rem, 8vw, 7rem);
-  color: var(--gold);
-  opacity: 0.06;
-  transform: rotate(-3deg);
+.work-bridge .calligraphy-word {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-3deg);
+  width: 100%;
+  text-align: center;
 }
 
-[data-theme="night"] .cw-ankh { opacity: 0.09; }
-
-.cw-revival {
-  bottom: 28%;
-  left: 5%;
-  font-size: clamp(2.8rem, 6vw, 5.5rem);
-  transform: rotate(3deg);
-  opacity: 0.04;
-}
-
-.cw-future {
-  bottom: 12%;
-  right: 0;
-  font-size: clamp(2.2rem, 5vw, 4.2rem);
+#ankh .calligraphy-word.sc-gold {
+  top: 18%;
+  right: 2%;
   transform: rotate(-5deg);
-  opacity: 0.035;
 }
 
-.cw-beauty {
-  top: 68%;
-  left: 42%;
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  transform: rotate(8deg);
-  opacity: 0.035;
+#ankh .calligraphy-word.sc-sm {
+  bottom: 12%;
+  left: 4%;
+  transform: rotate(4deg);
 }
 
-.cw-space {
-  top: 12%;
-  left: 8%;
-  font-size: clamp(3rem, 7vw, 6rem);
+#aetheria .calligraphy-word:first-child {
+  top: 14%;
+  right: 5%;
+  transform: rotate(-6deg);
+}
+
+#aetheria .calligraphy-word.sc-sm {
+  bottom: 15%;
+  left: 6%;
   transform: rotate(5deg);
-  opacity: 0.04;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .cw-architecture { animation: calligraphyDrift 28s ease-in-out infinite alternate; }
-  .cw-heritage { animation: calligraphyDrift 32s ease-in-out infinite alternate-reverse; }
-  .cw-ankh { animation: calligraphyDrift 24s ease-in-out infinite alternate; }
-  .cw-revival { animation: calligraphyDrift 30s ease-in-out infinite alternate-reverse; }
+.contact .calligraphy-word {
+  bottom: 18%;
+  right: 4%;
+  transform: rotate(-4deg);
 }
-
-@keyframes calligraphyDrift {
-  from { transform: translateY(0) rotate(var(--cw-rotate, 0deg)); }
-  to { transform: translateY(-12px) rotate(calc(var(--cw-rotate, 0deg) + 2deg)); }
-}
-
-.cw-architecture { --cw-rotate: -8deg; }
-.cw-heritage { --cw-rotate: 6deg; }
-.cw-ankh { --cw-rotate: -3deg; }
-.cw-revival { --cw-rotate: 3deg; }
 
 @media (max-width: 768px) {
-  .cw-art,
-  .cw-beauty,
-  .cw-space,
-  .cw-future { display: none; }
-
-  .calligraphy-word {
-    opacity: 0.04;
-  }
-
-  .cw-architecture {
-    font-size: 4.5rem;
-    right: -8%;
-  }
-
-  .cw-heritage {
-    font-size: 3.5rem;
-    left: -10%;
-  }
+  .calligraphy-word.sc-sm { display: none; }
+  .calligraphy-word.sc-light,
+  .calligraphy-word.sc-gold { font-size: clamp(3rem, 14vw, 5rem); }
 }
 
 /* ========== SWITCHES ========== */
@@ -773,9 +768,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   position: relative;
   z-index: 1;
   padding: var(--section-pad) 0;
+  overflow: hidden;
 }
 
 .container {
+  position: relative;
+  z-index: 2;
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--gutter);
@@ -832,7 +830,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: var(--bg);
   padding-top: clamp(3rem, 6vw, 5rem);
   padding-bottom: clamp(3rem, 6vw, 5rem);
-  overflow: hidden;
 }
 
 .intro-layout {
@@ -1793,7 +1790,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .scroll-line { animation: none; }
   .wave-deco { animation: none; }
   .hero-deco { animation: none; }
-  .calligraphy-word { animation: none !important; }
 }
 
 @media (max-width: 768px) {
