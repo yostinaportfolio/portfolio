@@ -205,11 +205,14 @@ function buildThumbs(container, items, onSelect) {
 // ========== Aetheria Gallery ==========
 const aetheriaGalleryData = [
   { src: `${AETHERIA}/waterfront-perspective.png`, caption: 'Aetheria — Waterfront Perspective' },
+  { src: `${AETHERIA}/resort-exterior.jpg`, caption: 'Aetheria — Resort Exterior' },
   { src: `${AETHERIA}/facade-signage.jpg`, caption: 'Aetheria — Facade Signage' },
-  { src: `${AETHERIA}/curved-facade-pool.jpg`, caption: 'Aetheria — Curved Facade & Pool' },
+  { src: `${AETHERIA}/curved-facade-render.png`, caption: 'Aetheria — Curved Facade & Pool' },
   { src: `${AETHERIA}/front-elevation.jpg`, caption: 'Aetheria — Front Elevation' },
   { src: `${AETHERIA}/building-section.png`, caption: 'Aetheria — Building Section' },
+  { src: `${AETHERIA}/floor-plan.jpg`, caption: 'Aetheria — Floor Plan' },
   { src: `${AETHERIA}/master-plan.png`, caption: 'Aetheria — Master Plan' },
+  { src: `${AETHERIA}/presentation-board.jpg`, caption: 'Aetheria — Presentation Board' },
   { src: `${AETHERIA}/pool-terrace.jpg`, caption: 'Aetheria — Pool Terrace View' },
 ];
 
