@@ -1,4 +1,5 @@
 .DS_Store
 ~$*
-ppt_extract/
 *.local
+*.pptx
+ppt_extract/

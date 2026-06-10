@@ -1,29 +1,34 @@
 /* Yostina Sherif — Portfolio Interactions */
 
+document.documentElement.classList.add('js-ready');
+
+const ANKH = 'assets/ankh';
+const AETHERIA = 'assets/aetheria';
+
 const galleryData = {
   exterior: [
-    { src: 'Image1_000.png', caption: 'Main Facade — Golden Hour' },
-    { src: 'Image7_000.png', caption: 'Triangular Wood Screen Facade' },
-    { src: 'Image8_000.png', caption: 'Courtyard & Elevated Walkway' },
-    { src: 'immmm.png', caption: 'Campus Perspective' },
-    { src: 'Image3.png', caption: 'Building Overview' },
-    { src: 'Image7.png', caption: 'Exterior Detail' },
+    { src: `${ANKH}/hero-facade.png`, caption: 'Main Facade — Golden Hour' },
+    { src: `${ANKH}/exterior-wood-screen.png`, caption: 'Triangular Wood Screen Facade' },
+    { src: `${ANKH}/courtyard-walkway.png`, caption: 'Courtyard & Elevated Walkway' },
+    { src: `${ANKH}/campus-perspective.png`, caption: 'Campus Perspective' },
+    { src: `${ANKH}/building-overview.png`, caption: 'Building Overview' },
+    { src: `${ANKH}/exterior-detail.png`, caption: 'Exterior Detail' },
   ],
   interior: [
-    { src: 'Image13_000.png', caption: 'Library — Living Tree Atrium' },
-    { src: 'Image14_000.png', caption: 'Classroom — Warm Natural Light' },
+    { src: `${ANKH}/library-atrium.png`, caption: 'Library — Living Tree Atrium' },
+    { src: `${ANKH}/classroom.png`, caption: 'Classroom — Warm Natural Light' },
   ],
   plans: [
-    { src: 'school of restoration master plan.png', caption: 'Master Site Plan' },
-    { src: 'First Floor plan.png', caption: 'First Floor Plan' },
-    { src: 'second floor.png', caption: 'Second Floor Plan' },
+    { src: `${ANKH}/plan-master.png`, caption: 'Master Site Plan' },
+    { src: `${ANKH}/plan-first-floor.png`, caption: 'First Floor Plan' },
+    { src: `${ANKH}/plan-second-floor.png`, caption: 'Second Floor Plan' },
   ],
 };
 
 const planImages = {
-  master: 'school of restoration master plan.png',
-  first: 'First Floor plan.png',
-  second: 'second floor.png',
+  master: `${ANKH}/plan-master.png`,
+  first: `${ANKH}/plan-first-floor.png`,
+  second: `${ANKH}/plan-second-floor.png`,
 };
 
 const themeToggle = document.getElementById('themeToggle');
@@ -53,30 +58,23 @@ function smoothScrollTo(targetY, duration = 900) {
     window.scrollTo(0, targetY);
     return;
   }
-
   const startY = window.scrollY;
   const distance = targetY - startY;
   const startTime = performance.now();
   isScrolling = true;
 
   function step(now) {
-    const elapsed = now - startTime;
-    const progress = Math.min(elapsed / duration, 1);
+    const progress = Math.min((now - startTime) / duration, 1);
     window.scrollTo(0, startY + distance * easeOutCubic(progress));
-    if (progress < 1) {
-      requestAnimationFrame(step);
-    } else {
-      isScrolling = false;
-    }
+    if (progress < 1) requestAnimationFrame(step);
+    else isScrolling = false;
   }
-
   requestAnimationFrame(step);
 }
 
 function scrollToSection(el) {
   const navHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 72;
-  const top = el.getBoundingClientRect().top + window.scrollY - navHeight + 1;
-  smoothScrollTo(top);
+  smoothScrollTo(el.getBoundingClientRect().top + window.scrollY - navHeight + 1);
 }
 
 document.querySelectorAll('a[href^="#"]').forEach(link => {
@@ -135,12 +133,25 @@ window.addEventListener('scroll', () => {
 function initReveals() {
   const revealEls = document.querySelectorAll('.reveal:not(.visible)');
 
-  revealEls.forEach((el, i) => {
-    const parent = el.closest('.hero-content, .intro-layout, .intro-content, .edu-grid, .hero-actions, .tools-showcase, .school-bridge, .work-bridge-inner');
-    const siblings = parent ? [...parent.querySelectorAll('.reveal')] : [el];
-    const index = siblings.indexOf(el);
-    el.style.setProperty('--reveal-delay', `${index * 100}ms`);
+  revealEls.forEach((el) => {
+    const parent = el.closest('.hero-content, .intro-layout, .intro-content, .edu-grid, .tools-showcase, .school-bridge, .work-bridge-inner, .project-header, .project-intro, .gallery, .feature-grid, .aetheria-gallery, .aetheria-card, .contact-grid');
+    if (parent) {
+      const siblings = [...parent.querySelectorAll('.reveal')];
+      el.style.setProperty('--reveal-delay', `${siblings.indexOf(el) * 100}ms`);
+    }
   });
+
+  const heroReveals = document.querySelectorAll('.hero .reveal');
+  heroReveals.forEach((el, i) => {
+    setTimeout(() => el.classList.add('visible'), 400 + i * 120);
+  });
+
+  const nonHeroReveals = [...document.querySelectorAll('.reveal')].filter((el) => !el.closest('.hero'));
+
+  if (prefersReducedMotion) {
+    nonHeroReveals.forEach((el) => el.classList.add('visible'));
+    return;
+  }
 
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -149,40 +160,63 @@ function initReveals() {
         revealObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  }, { rootMargin: '0px 0px -6% 0px', threshold: 0.08 });
 
-  revealEls.forEach(el => revealObserver.observe(el));
-
-  // Hero reveals on load
-  const heroReveals = document.querySelectorAll('.hero .reveal');
-  heroReveals.forEach((el, i) => {
-    setTimeout(() => el.classList.add('visible'), 200 + i * 120);
+  nonHeroReveals.forEach((el) => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
+      el.classList.add('visible');
+    } else {
+      revealObserver.observe(el);
+    }
   });
 }
 
 initReveals();
 
+// ========== Gallery helpers ==========
+function swapImage(imgEl, captionEl, item) {
+  imgEl.classList.add('is-fading');
+  setTimeout(() => {
+    imgEl.src = item.src;
+    imgEl.alt = item.caption;
+    if (captionEl) captionEl.textContent = item.caption;
+    imgEl.classList.remove('is-fading');
+  }, 400);
+}
+
+function buildThumbs(container, items, onSelect) {
+  container.innerHTML = '';
+  items.forEach((item, i) => {
+    const thumb = document.createElement('button');
+    thumb.className = `thumb${i === 0 ? ' active' : ''}`;
+    thumb.innerHTML = `<img src="${item.src}" alt="${item.caption}" loading="lazy" />`;
+    thumb.addEventListener('click', () => onSelect(i, items));
+    container.appendChild(thumb);
+  });
+}
+
 // ========== Aetheria Gallery ==========
+const aetheriaGalleryData = [
+  { src: `${AETHERIA}/facade.jpg`, caption: 'Aetheria — Mediterranean Facade' },
+  { src: `${AETHERIA}/sea-view.jpg`, caption: 'Aetheria — Sea View Perspective' },
+  { src: `${AETHERIA}/concept.png`, caption: 'Aetheria — Design Concept' },
+];
+
 const aetheriaMain = document.getElementById('aetheriaMain');
 const aetheriaCaption = document.getElementById('aetheriaCaption');
-const aetheriaThumbs = document.querySelectorAll('.aetheria-thumbs .thumb');
+const aetheriaThumbs = document.getElementById('aetheriaThumbs');
 
-aetheriaThumbs.forEach(thumb => {
-  thumb.addEventListener('click', () => {
-    if (thumb.classList.contains('active')) return;
-    aetheriaThumbs.forEach(t => t.classList.remove('active'));
-    thumb.classList.add('active');
-    aetheriaMain.classList.add('is-fading');
-    setTimeout(() => {
-      aetheriaMain.src = thumb.dataset.src;
-      aetheriaMain.alt = thumb.dataset.caption;
-      aetheriaCaption.textContent = thumb.dataset.caption;
-      aetheriaMain.classList.remove('is-fading');
-    }, 400);
+function initAetheriaGallery() {
+  if (!aetheriaThumbs || aetheriaThumbs.dataset.ready) return;
+  aetheriaThumbs.dataset.ready = 'true';
+  buildThumbs(aetheriaThumbs, aetheriaGalleryData, (index, items) => {
+    aetheriaThumbs.querySelectorAll('.thumb').forEach((t, i) => t.classList.toggle('active', i === index));
+    swapImage(aetheriaMain, aetheriaCaption, items[index]);
   });
-});
+}
 
-// ========== Panel crossfade helper ==========
+// ========== Panel crossfade ==========
 function crossfadePanels(hideEl, showEl, onShown) {
   if (hideEl && !hideEl.classList.contains('is-hidden')) {
     hideEl.style.opacity = '0';
@@ -193,7 +227,6 @@ function crossfadePanels(hideEl, showEl, onShown) {
       hideEl.style.transform = '';
     }, 400);
   }
-
   if (showEl) {
     showEl.classList.remove('is-hidden');
     showEl.classList.add('is-entering');
@@ -206,29 +239,8 @@ function crossfadePanels(hideEl, showEl, onShown) {
   }
 }
 
-// ========== Gallery ==========
+// ========== Ankh Gallery ==========
 const viewBtns = document.querySelectorAll('.view-btn');
-
-function swapGalleryImage(item) {
-  galleryMain.classList.add('is-fading');
-  setTimeout(() => {
-    galleryMain.src = item.src;
-    galleryMain.alt = item.caption;
-    galleryCaption.textContent = item.caption;
-    galleryMain.classList.remove('is-fading');
-  }, 400);
-}
-
-function buildThumbs(items) {
-  galleryThumbs.innerHTML = '';
-  items.forEach((item, i) => {
-    const thumb = document.createElement('button');
-    thumb.className = `thumb${i === 0 ? ' active' : ''}`;
-    thumb.innerHTML = `<img src="${item.src}" alt="${item.caption}" loading="lazy" />`;
-    thumb.addEventListener('click', () => selectThumb(i, items));
-    galleryThumbs.appendChild(thumb);
-  });
-}
 
 function renderGallery(view, initial = false) {
   currentView = view;
@@ -248,26 +260,26 @@ function renderGallery(view, initial = false) {
   if (initial) {
     plansSection.classList.add('is-hidden');
     ankhGallery.classList.remove('is-hidden');
-    buildThumbs(items);
+    buildThumbs(galleryThumbs, items, (index, list) => {
+      galleryThumbs.querySelectorAll('.thumb').forEach((t, i) => t.classList.toggle('active', i === index));
+      swapImage(galleryMain, galleryCaption, list[index]);
+    });
     return;
   }
 
-  if (!plansSection.classList.contains('is-hidden')) {
-    crossfadePanels(plansSection, ankhGallery, () => {
-      swapGalleryImage(items[0]);
-      buildThumbs(items);
+  const showGallery = () => {
+    swapImage(galleryMain, galleryCaption, items[0]);
+    buildThumbs(galleryThumbs, items, (index, list) => {
+      galleryThumbs.querySelectorAll('.thumb').forEach((t, i) => t.classList.toggle('active', i === index));
+      swapImage(galleryMain, galleryCaption, list[index]);
     });
-  } else {
-    swapGalleryImage(items[0]);
-    buildThumbs(items);
-  }
-}
+  };
 
-function selectThumb(index, items) {
-  galleryThumbs.querySelectorAll('.thumb').forEach((t, i) => {
-    t.classList.toggle('active', i === index);
-  });
-  swapGalleryImage(items[index]);
+  if (!plansSection.classList.contains('is-hidden')) {
+    crossfadePanels(plansSection, ankhGallery, showGallery);
+  } else {
+    showGallery();
+  }
 }
 
 viewBtns.forEach(btn => {
@@ -278,7 +290,7 @@ viewBtns.forEach(btn => {
   });
 });
 
-// ========== Floor Plan Switcher ==========
+// ========== Floor Plans ==========
 const planTabs = document.querySelectorAll('.plan-tab');
 const planViewer = document.querySelector('.plan-viewer');
 
@@ -309,19 +321,39 @@ blueprintToggle.addEventListener('change', () => {
   planViewer.classList.toggle('blueprint', blueprintToggle.checked);
 });
 
-// ========== Init ==========
-renderGallery('exterior', true);
+let ankhGalleryReady = false;
 
-// Active nav highlight
-const sections = document.querySelectorAll('section[id]');
+function initAnkhGallery() {
+  if (ankhGalleryReady) return;
+  ankhGalleryReady = true;
+  renderGallery('exterior', true);
+}
+
+const ankhSection = document.getElementById('ankh');
+const aetheriaSection = document.getElementById('aetheria');
+
+const galleryLazyObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    if (entry.target === ankhSection) initAnkhGallery();
+    if (entry.target === aetheriaSection) initAetheriaGallery();
+    galleryLazyObserver.unobserve(entry.target);
+  });
+}, { rootMargin: '300px 0px' });
+
+if (ankhSection) galleryLazyObserver.observe(ankhSection);
+if (aetheriaSection) galleryLazyObserver.observe(aetheriaSection);
+
+// ========== Nav active links ==========
 const navLinks = document.querySelectorAll('.nav-links a, .mobile-menu a');
+const timelineScenes = document.querySelectorAll('.timeline-scene, .hero');
 
 window.addEventListener('scroll', () => {
   if (isScrolling) return;
   let current = 'hero';
   const navHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 72;
 
-  sections.forEach(section => {
+  timelineScenes.forEach(section => {
     const top = section.offsetTop - navHeight - 20;
     if (window.scrollY >= top) current = section.id;
   });
